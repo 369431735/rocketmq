@@ -41,6 +41,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+/**
+ * 构建日志
+ */
 public class LoggingBuilder {
 
     public static final String SYSTEM_OUT = "System.out";
@@ -140,6 +143,9 @@ public class LoggingBuilder {
         }
     }
 
+    /**
+     * 异步新增
+     */
     public static class AsyncAppender extends Appender implements Appender.AppenderPipeline {
 
         public static final int DEFAULT_BUFFER_SIZE = 128;
@@ -419,6 +425,9 @@ public class LoggingBuilder {
         }
     }
 
+    /**
+     * 平静写入
+     */
     private static class QuietWriter extends FilterWriter {
 
         protected Appender appender;
@@ -428,6 +437,11 @@ public class LoggingBuilder {
             this.appender = appender;
         }
 
+        /***
+         * 将字符串写入文件
+         * @param string
+         */
+        @Override
         public void write(String string) {
             if (string != null) {
                 try {
@@ -439,6 +453,10 @@ public class LoggingBuilder {
             }
         }
 
+        /***
+         *将缓存中的数据强制写出
+         */
+        @Override
         public void flush() {
             try {
                 out.flush();
@@ -451,9 +469,14 @@ public class LoggingBuilder {
 
     public static class WriterAppender extends Appender {
 
-
+        /**
+         * 立即刷新
+         */
         protected boolean immediateFlush = true;
 
+        /**
+         * 编码
+         */
         protected String encoding;
 
 
@@ -471,18 +494,29 @@ public class LoggingBuilder {
         public boolean getImmediateFlush() {
             return immediateFlush;
         }
-
+        /**
+         * todo 暂不知该方法的作用
+         */
+         @Override
         public void activateOptions() {
         }
 
-
+        /**
+         * 记录日志
+         * @param event
+         */
         public void append(LoggingEvent event) {
+             //验证是否满足需要记录日志的条件
             if (!checkEntryConditions()) {
                 return;
             }
             subAppend(event);
         }
 
+        /**
+         * 验证是否满足需要记录日志的条件
+         * @return
+         */
         protected boolean checkEntryConditions() {
             if (this.closed) {
                 SysLogger.warn("Not allowed to write to a closed appender.");
@@ -502,6 +536,9 @@ public class LoggingBuilder {
             return true;
         }
 
+        /**
+         * 关闭流
+         */
         public synchronized void close() {
             if (this.closed) {
                 return;
@@ -511,6 +548,9 @@ public class LoggingBuilder {
             reset();
         }
 
+        /**
+         * 关闭流
+         */
         protected void closeWriter() {
             if (qw != null) {
                 try {
@@ -521,6 +561,11 @@ public class LoggingBuilder {
             }
         }
 
+        /**
+         * 创建流
+         * @param os
+         * @return
+         */
         protected OutputStreamWriter createWriter(OutputStream os) {
             OutputStreamWriter retval = null;
 
@@ -547,13 +592,20 @@ public class LoggingBuilder {
             encoding = value;
         }
 
-
+        /**
+         * 设置Writer时写入头部内容
+         * @param writer
+         */
         public synchronized void setWriter(Writer writer) {
             reset();
             this.qw = new QuietWriter(writer, this);
             writeHeader();
         }
 
+        /**
+         * 写入日志
+         * @param event
+         */
         protected void subAppend(LoggingEvent event) {
             this.qw.write(this.layout.format(event));
 
@@ -572,11 +624,17 @@ public class LoggingBuilder {
             }
         }
 
+        /**
+         * 重置
+         */
         protected void reset() {
             closeWriter();
             this.qw = null;
         }
 
+        /**
+         * 写入尾部内容
+         */
         protected void writeFooter() {
             if (layout != null) {
                 String f = layout.getFooter();
@@ -587,6 +645,9 @@ public class LoggingBuilder {
             }
         }
 
+        /**
+         * 写入头部内容
+         */
         protected void writeHeader() {
             if (layout != null) {
                 String h = layout.getHeader();
@@ -596,12 +657,19 @@ public class LoggingBuilder {
             }
         }
 
+        /**
+         * 是否需要刷新
+         * @param event
+         * @return
+         */
         protected boolean shouldFlush(final LoggingEvent event) {
             return event != null && immediateFlush;
         }
     }
 
-
+    /**
+     * 文件写入
+     */
     public static class FileAppender extends WriterAppender {
 
         protected boolean fileAppend = true;
@@ -732,7 +800,9 @@ public class LoggingBuilder {
         }
     }
 
-
+    /**
+     * 文件滚动写入
+     */
     public static class RollingFileAppender extends FileAppender {
 
         protected long maxFileSize = 10 * 1024 * 1024;
@@ -874,6 +944,9 @@ public class LoggingBuilder {
         }
     }
 
+    /**
+     * 文件每日滚动写入
+     */
 
     public static class DailyRollingFileAppender extends FileAppender {
 
@@ -1105,6 +1178,9 @@ public class LoggingBuilder {
         }
     }
 
+    /**
+     * 控制台写入
+     */
     public static class ConsoleAppender extends WriterAppender {
 
         protected String target = SYSTEM_OUT;

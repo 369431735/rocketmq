@@ -17,6 +17,9 @@
 
 package org.apache.rocketmq.logging.inner;
 
+/***
+ * 系统日志
+ */
 public class SysLogger {
 
     protected static boolean debugEnabled = false;

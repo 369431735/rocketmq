@@ -17,6 +17,9 @@
 
 package org.apache.rocketmq.logging.inner;
 
+/**
+ * 布局
+ */
 public abstract class Layout {
 
     public abstract String format(LoggingEvent event);
@@ -25,15 +28,26 @@ public abstract class Layout {
         return "text/plain";
     }
 
+    /**
+     * 头部内容
+     * @return
+     */
     public String getHeader() {
         return null;
     }
 
+    /**
+     * 尾部内容
+     * @return
+     */
     public String getFooter() {
         return null;
     }
 
-
+    /**
+     * 是否忽略异常
+     * @return
+     */
     abstract public boolean ignoresThrowable();
 
 }

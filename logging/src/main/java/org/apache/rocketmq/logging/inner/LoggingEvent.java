@@ -25,6 +25,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
+/**
+ * 日志事件
+ */
 public class LoggingEvent implements java.io.Serializable {
 
     transient public final String fqnOfCategoryClass;
