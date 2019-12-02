@@ -36,6 +36,11 @@ public class RemotingHelper {
 
     private static final InternalLogger log = InternalLoggerFactory.getLogger(ROCKETMQ_REMOTING);
 
+    /**
+     * 异常简单描述
+     * @param e
+     * @return
+     */
     public static String exceptionSimpleDesc(final Throwable e) {
         StringBuffer sb = new StringBuffer();
         if (e != null) {

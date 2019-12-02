@@ -25,10 +25,20 @@ import org.apache.rocketmq.remoting.exception.RemotingTooMuchRequestException;
 import org.apache.rocketmq.remoting.netty.NettyRequestProcessor;
 import org.apache.rocketmq.remoting.protocol.RemotingCommand;
 
+/**
+ * 客户端
+ */
 public interface RemotingClient extends RemotingService {
-
+    /**
+     * 更新地址
+     * @param addrs
+     */
     void updateNameServerAddressList(final List<String> addrs);
 
+    /***
+     * 获取服务器地址
+     * @return
+     */
     List<String> getNameServerAddressList();
 
     RemotingCommand invokeSync(final String addr, final RemotingCommand request,
